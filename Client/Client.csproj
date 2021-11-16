@@ -1,19 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>BlazorApp.Client</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>BlazorApp.Client</RootNamespace>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Shared\Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Shared\Shared.csproj" />
+	</ItemGroup>
 
+	<PropertyGroup>
+		<BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
+		<PublishTrimmed>true</PublishTrimmed>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<DebuggerSupport>false</DebuggerSupport>
+		<EventSourceSupport>false</EventSourceSupport>
+		<InvariantGlobalization>true</InvariantGlobalization>
+	</PropertyGroup>
 </Project>
