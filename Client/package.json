@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build:azure": "dotnet build",
     "buildcss": "postcss wwwroot/css/app.css -o wwwroot/css/app.min.css"
   },
   "author": "",
