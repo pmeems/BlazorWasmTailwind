@@ -1,4 +1,6 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -62,3 +64,51 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+
+/************* Tailwind stuff for blazor ***********/
+h1 {
+    @apply text-green-800 mb-1 text-4xl font-extrabold leading-tight lg:text-5xl xl:text-6xl sm:mb-3;
+}
+
+h2 {
+    @apply text-green-700 mt-5 mb-2 text-2xl font-semibold leading-tight lg:text-3xl;
+}
+
+h5 {
+    @apply mt-10 mb-3 font-semibold text-gray-900;
+}
+
+nav a {
+    @apply mr-1 md:mr-5 text-gray-600 hover:text-gray-900;
+}
+
+    nav a.active {
+        @apply border-b-4 border-green-600;
+    }
+
+    nav a:hover, nav a:focus-visible {
+        text-decoration: none;
+    }
+
+ul.list-disc {
+    @apply ml-10 mb-6;
+}
+
+.btn {
+    @apply font-bold py-2 px-4 rounded;
+}
+    .btn:focus {
+        @apply outline-none;
+        @apply ring;
+        @apply border-blue-300;
+    }
+
+.btn-blue {
+    @apply bg-blue-500 text-white;
+}
+
+    .btn-blue:hover {
+        @apply bg-blue-700;
+    }
+

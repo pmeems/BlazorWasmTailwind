@@ -4,12 +4,15 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<RootNamespace>BlazorApp.Shared</RootNamespace>
 	</PropertyGroup>
-
+	
+	<PropertyGroup Condition=" '$(Configuration)'!='Debug' ">
+		<DebuggerSupport>false</DebuggerSupport>
+		<DebugType>none</DebugType>
+	</PropertyGroup>
 	<PropertyGroup>
-		<BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
 		<PublishTrimmed>true</PublishTrimmed>
 		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-		<DebuggerSupport>false</DebuggerSupport>
+		<BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
 		<EventSourceSupport>false</EventSourceSupport>
 		<InvariantGlobalization>true</InvariantGlobalization>
 	</PropertyGroup>

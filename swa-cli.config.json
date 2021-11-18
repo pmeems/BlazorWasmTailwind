@@ -1,0 +1,10 @@
+{
+  "configurations": {
+    "app": {
+      "context": "http://localhost:5000",
+      "apiLocation": "api",
+      "run": "dotnet watch run --project Client/Client.csproj",
+      "swaConfigLocation": "./Client"
+    }
+  }
+}
