@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build:azure": "dotnet build",
-    "buildcss": "postcss wwwroot/css/app.css -o wwwroot/css/app.min.css"
+    "buildcss": "postcss wwwroot/css/app.css -o wwwroot/css/app.min.css && postcss obj/Debug/net6.0/scopedcss/bundle/Client.styles.css -o wwwroot/css/Client.min.css"
   },
   "author": "",
   "license": "ISC",

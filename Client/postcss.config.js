@@ -2,6 +2,11 @@ module.exports = {
     plugins: {
         tailwindcss: {},
         autoprefixer: {},
-        cssnano: {}
+        cssnano: {
+            "preset": [
+                "default",
+                { "discardComments": { "removeAll": true } }
+            ]
+        }
     }
 }
