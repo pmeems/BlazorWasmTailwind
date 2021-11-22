@@ -102,7 +102,7 @@ The Tailwind CLI handles the purging of the not-used Tailwind CSS, resulting in 
 
 I haven't yet removed all the bootstrap css classes from the razor pages and the isolated css file. When that is done (I leave that for you) Client.min.css will be even more smaller.
 
-All these changes results in a `Largest Contentful Paint` of 2.8s and a `Total Blocking Time` of 1.5s.
+All these changes results in a `Largest Contentful Paint` of 2.4s and a `Total Blocking Time` of 1.5s.
 
 This is still not very fast for such a minimal web app, but now the duration is mostly in downloading `/_framework/System.Private.CoreLib.dll`, `/_framework/dotnet.wasm` and other framework related dlls.
 
