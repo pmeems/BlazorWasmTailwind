@@ -13,24 +13,20 @@ using System.Net;
 
 namespace BlazorApp.Api
 {
+    /// <summary>
+    /// Weather forecast function.
+    /// </summary>
     public static class WeatherForecastFunction
     {
         private static string GetSummary(int temp)
         {
-            var summary = "Mild";
-
-            if (temp >= 32)
+            var summary = temp switch
             {
-                summary = "Hot";
-            }
-            else if (temp <= 16 && temp > 0)
-            {
-                summary = "Cold";
-            }
-            else if (temp <= 0)
-            {
-                summary = "Freezing!";
-            }
+                >= 32 => "Hot",
+                <= 16 and > 0 => "Cold",
+                <= 0 => "Freezing!",
+                _ => "Mild"
+            };
 
             return summary;
         }
@@ -45,7 +41,7 @@ namespace BlazorApp.Api
         {
             log.LogInformation("In WeatherForecast.Run");
             var randomNumber = new Random();
-            var temp = 0;
+            int temp;
 
             var result = Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

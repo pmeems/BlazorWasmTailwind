@@ -13,10 +13,17 @@ using Newtonsoft.Json;
 
 namespace BlazorApp.Api
 {
+    /// <summary>
+    /// Open API example function.
+    /// </summary>
     public class OpenApiFunction
     {
         private readonly ILogger<OpenApiFunction> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenApiFunction"/> class.
+        /// </summary>
+        /// <param name="log">The logger.</param>
         public OpenApiFunction(ILogger<OpenApiFunction> log)
         {
             _logger = log;
@@ -46,4 +53,3 @@ namespace BlazorApp.Api
         }
     }
 }
-
