@@ -5,7 +5,8 @@
   "scripts": {
     "build:azure": "dotnet build",
     "buildcss": "postcss wwwroot/css/app.css -o wwwroot/css/app.min.css && postcss obj/Debug/net6.0/scopedcss/bundle/Client.styles.css -o wwwroot/css/Client.min.css",
-    "fingerprint": "replace-in-file --configFile=fingerprint.config.js --verbose" 
+    "fingerprint": "replace-in-file --configFile=fingerprint.config.js --verbose",
+    "build-fingerprint-css": "npm run buildcss && npm run fingerprint"
   },
   "author": "",
   "license": "ISC",
