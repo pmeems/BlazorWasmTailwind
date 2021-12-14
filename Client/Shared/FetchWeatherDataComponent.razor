@@ -1,0 +1,40 @@
+﻿@inject HttpClient _http
+
+<table class="table-simple">
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Temp. (C)</th>
+        <th>Temp. (F)</th>
+        <th>Summary</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var forecast in Forecasts)
+    {
+        <tr class="border-b">
+            <td>@forecast.Date.ToShortDateString()</td>
+            <td>@forecast.TemperatureC</td>
+            <td>@forecast.TemperatureF</td>
+            <td>@forecast.Summary</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@code {
+    private protected WeatherForecast[] Forecasts = {};
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Forecasts = await _http.GetFromJsonAsync<WeatherForecast[]>("/api/WeatherForecast") ?? new WeatherForecast[]{};
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+            throw new Exception("Could not load the weather data", ex);
+        }
+    }
+}
