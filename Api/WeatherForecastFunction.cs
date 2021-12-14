@@ -1,12 +1,15 @@
-using System;
-using System.Linq;
+using BlazorApp.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Extensions.Logging;
-
-using BlazorApp.Shared;
+using Microsoft.OpenApi.Models;
+using System;
+using System.Linq;
+using System.Net;
 
 namespace BlazorApp.Api
 {
@@ -33,10 +36,14 @@ namespace BlazorApp.Api
         }
 
         [FunctionName("WeatherForecast")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "Get Weather Forecast" })]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(WeatherForecast), Description = "The created WeatherForecast Results")]
         public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
+            log.LogInformation("In WeatherForecast.Run");
             var randomNumber = new Random();
             var temp = 0;
 
