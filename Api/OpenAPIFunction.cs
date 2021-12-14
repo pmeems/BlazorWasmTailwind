@@ -11,45 +11,44 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 
-namespace BlazorApp.Api
+namespace BlazorApp.Api;
+
+/// <summary>
+/// Open API example function.
+/// </summary>
+public class OpenApiFunction
 {
+    private readonly ILogger<OpenApiFunction> _logger;
+
     /// <summary>
-    /// Open API example function.
+    /// Initializes a new instance of the <see cref="OpenApiFunction"/> class.
     /// </summary>
-    public class OpenApiFunction
+    /// <param name="log">The logger.</param>
+    public OpenApiFunction(ILogger<OpenApiFunction> log)
     {
-        private readonly ILogger<OpenApiFunction> _logger;
+        _logger = log;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OpenApiFunction"/> class.
-        /// </summary>
-        /// <param name="log">The logger.</param>
-        public OpenApiFunction(ILogger<OpenApiFunction> log)
-        {
-            _logger = log;
-        }
+    [FunctionName("OpenApiFunction")]
+    [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
+    [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
+    [OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
+    public async Task<IActionResult> Run(
+        [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req)
+    {
+        _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        [FunctionName("OpenApiFunction")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
-        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req)
-        {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+        string name = req.Query["name"];
 
-            string name = req.Query["name"];
+        var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+        dynamic data = JsonConvert.DeserializeObject(requestBody);
+        name ??= data?.name;
 
-            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name ??= data?.name;
+        var responseMessage = string.IsNullOrEmpty(name)
+            ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
+            : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
-            var responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
-        }
+        return new OkObjectResult(responseMessage);
     }
 }

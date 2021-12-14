@@ -1,22 +1,21 @@
 using Microsoft.Extensions.Hosting;
 
-namespace ApiIsolated
+namespace ApiIsolated;
+
+/// <summary>
+/// Program class.
+/// </summary>
+public class Program
 {
     /// <summary>
-    /// Program class.
+    /// Entry point.
     /// </summary>
-    public class Program
+    public static void Main()
     {
-        /// <summary>
-        /// Entry point.
-        /// </summary>
-        public static void Main()
-        {
-            var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults()
-                .Build();
+        var host = new HostBuilder()
+            .ConfigureFunctionsWorkerDefaults()
+            .Build();
 
-            host.Run();
-        }
+        host.Run();
     }
 }
