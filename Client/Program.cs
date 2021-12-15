@@ -1,6 +1,9 @@
+using System.Net;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using BlazorApp.Client;
+using BlazorApp.Client.Shared;
+using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -24,7 +27,17 @@ await builder.Build().RunAsync();
 // Extract the service-registration process to the static local function.
 static void ConfigureServices(IServiceCollection services, string baseAddress)
 {
-    services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(baseAddress) });
+    // services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(baseAddress) });
+
+    services.AddTransient(sp => new HttpClient(new DefaultBrowserOptionsMessageHandler(new HttpClientHandler())
+    {
+        DefaultBrowserRequestCache = BrowserRequestCache.ForceCache,
+        // DefaultBrowserRequestCredentials = BrowserRequestCredentials.Include,
+        DefaultBrowserRequestMode = BrowserRequestMode.Cors
+    })
+    {
+        BaseAddress = new Uri(baseAddress)
+    });
 
     // services.AddScoped<IFoo, MyFoo>();
 }
