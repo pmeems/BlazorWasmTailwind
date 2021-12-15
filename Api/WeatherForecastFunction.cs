@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 
 namespace BlazorApp.Api;
+
 /// <summary>
 /// Weather forecast function.
 /// </summary>

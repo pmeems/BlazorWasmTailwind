@@ -1,5 +1,6 @@
 using System.IO;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,6 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
 
 namespace BlazorApp.Api;
 
@@ -39,10 +39,20 @@ public class OpenApiFunction
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
+        // Read query string:
         string name = req.Query["name"];
 
-        var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        dynamic data = JsonConvert.DeserializeObject(requestBody);
+        // Read body:
+        string requestBody;
+        using (var streamReader = new StreamReader(req.Body))
+        {
+            requestBody = await streamReader.ReadToEndAsync();
+        }
+
+        // Deserialize the request body, stringly typed is prefert:
+        var data = JsonSerializer.Deserialize<dynamic>(requestBody);
+
+        // If query string is not provided use value from body:
         name ??= data?.name;
 
         var responseMessage = string.IsNullOrEmpty(name)
