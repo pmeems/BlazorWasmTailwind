@@ -1,5 +1,7 @@
 ﻿@using System.Data.SqlTypes
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
 @inject HttpClient _http
+@inject IWebAssemblyHostEnvironment _hostEnv
 
 
 @if (Loading)
@@ -39,6 +41,9 @@ else
     {
         try
         {
+            // If the code is running on the pre-rendering process, then don't call APIs.
+            if (_hostEnv.Environment == "Prerendering") return;
+
             Forecasts = await _http.GetFromJsonAsync<WeatherForecast[]>("/api/WeatherForecast") ?? new WeatherForecast[] { };
         }
         catch (Exception ex)

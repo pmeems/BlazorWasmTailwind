@@ -106,6 +106,11 @@ All these changes results in a `Largest Contentful Paint` of 2.4s and a `Total B
 
 This is still not very fast for such a minimal web app, but now the duration is mostly in downloading `/_framework/System.Private.CoreLib.dll`, `/_framework/dotnet.wasm` and other framework related dlls.
 
+## Pre-render
+Pre-rendering is a challenge when you're not using a hosted Blazor Server-Side app.
+Thanks to this little, but very good working package [BlazorWasmPreRendering.Build](https://github.com/jsakamoto/BlazorWasmPreRendering.Build) it is very easy to accomplish this.
+This package is implemented in this template.
+
 ## Start simplified
 
 I created `swa-cli.config.json` which contains the start-up code.
