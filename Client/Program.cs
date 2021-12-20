@@ -26,7 +26,7 @@ await builder.Build().RunAsync();
 // Extract the service-registration process to the static local function.
 static void ConfigureServices(IServiceCollection services, string baseAddress)
 {
-    services.AddTransient(sp => new HttpClient(new DefaultBrowserOptionsMessageHandler(new HttpClientHandler())
+    services.AddTransient(_ => new HttpClient(new DefaultBrowserOptionsMessageHandler(new HttpClientHandler())
     {
         DefaultBrowserRequestCache = BrowserRequestCache.ForceCache,
         DefaultBrowserRequestMode = BrowserRequestMode.Cors
