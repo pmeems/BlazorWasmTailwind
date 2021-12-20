@@ -1,9 +1,6 @@
 ﻿@page "/counter"
 
-<PageTitle>Counter</PageTitle>
-<HeadContent>
-    <meta name="description" content="Blazor WASM page to count a value.">
-</HeadContent>
+<HeaderComponent Title="@PageTitle" MetaTags="@MetaTags"></HeaderComponent>
 
 <h1>Counter</h1>
 
@@ -13,9 +10,13 @@
 
 @code {
     private protected int CurrentCount;
+    private protected string PageTitle = "Counter";
+    private protected Dictionary<string, string> MetaTags = new() { { "description", "This is the counter page" } };
+
 
     private void IncrementCount()
     {
         CurrentCount++;
+        PageTitle = $"Counter {CurrentCount}";
     }
 }

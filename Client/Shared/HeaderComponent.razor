@@ -1,0 +1,57 @@
+﻿@inject NavigationManager _navigationManager
+
+<PageTitle>@Title</PageTitle>
+<HeadContent>
+    @foreach (var (key, value) in MetaTags)
+    {
+        @if (key.StartsWith("og:"))
+        {
+            <meta prefix="og: http://ogp.me/ns#" property="@key" content="@value" />
+        }
+        else
+        {
+            <meta name="@key" content="@value" />
+        }
+    }
+</HeadContent>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = "Index";
+
+    [Parameter, EditorRequired]
+    public Dictionary<string, string> MetaTags { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var pageUrl = _navigationManager.Uri;
+
+        // https://github.com/joshbuchea/HEAD
+
+        await Task.Delay(0);
+        // Add default value:
+        const string defaultDescription = "Blazor WASM template optimized for Azure Static Web Apps, using TailwindCSS and .NET6. Come & collaborate with me!";
+
+        if (!MetaTags.ContainsKey("description")) MetaTags.Add("description", defaultDescription);
+
+        // Facebook:
+        // https://neilpatel.com/blog/open-graph-meta-tags/
+        if (!MetaTags.ContainsKey("og:type")) MetaTags.Add("og:type", "website"); // website, article, blog
+        if (!MetaTags.ContainsKey("og:title")) MetaTags.Add("og:title", Title); // 60-90 letters
+        if (!MetaTags.ContainsKey("og:description")) MetaTags.Add("og:description", MetaTags["description"]); // use around 200 letters
+        if (!MetaTags.ContainsKey("og:url")) MetaTags.Add("og:url", pageUrl); // the canonical URL for the page
+
+        // og:image: The recommended resolution for an OG image is 1200 pixels x 627 pixels (1.91/1 ratio). Don’t exceed the 5MB size limit.
+
+        // Check for Facebook with: https://developers.facebook.com/tools/debug/
+
+        // Twitter card:
+        if (!MetaTags.ContainsKey("twitter:card")) MetaTags.Add("twitter:card", "summary");
+        if (!MetaTags.ContainsKey("twitter:title")) MetaTags.Add("twitter:title", Title);
+        if (!MetaTags.ContainsKey("twitter:description")) MetaTags.Add("twitter:description", MetaTags["description"]); // Twitter limits this part to 200 characters.
+        if (!MetaTags.ContainsKey("twitter:url")) MetaTags.Add("twitter:url", pageUrl);
+        if (MetaTags.ContainsKey("og:image") && !MetaTags.ContainsKey("twitter:image")) MetaTags.Add("twitter:image", MetaTags["og:image"]);
+
+        // Twitter card approval: https://cards-dev.twitter.com/validator
+    }
+}

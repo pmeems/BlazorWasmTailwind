@@ -1,5 +1,6 @@
 ﻿@page "/fetchdata"
 
+<HeaderComponent Title="@PageTitle" MetaTags="@MetaTags"></HeaderComponent>
 
 <h1>Weather forecast</h1>
 
@@ -16,8 +17,12 @@
 @code {
     private protected ErrorBoundary? MyErrorBoundary;
 
+    private protected string PageTitle = "Fetch data";
+    private protected Dictionary<string, string> MetaTags = new() { { "description", "Fetch data from an Azure Function" } };
+
     protected override void OnParametersSet()
     {
         MyErrorBoundary?.Recover();
     }
+
 }

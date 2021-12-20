@@ -1,17 +1,7 @@
 ﻿@page "/"
 @inject NavigationManager _navigationManager
 
-
-<PageTitle>Index</PageTitle>
-<HeadContent>
-    <meta name="description" content="Blazor WASM index page.">
-    <meta prefix="og: http://ogp.me/ns#" property="og:title" content="Azure Static Web Apps Blazor Sample" />
-    <meta prefix="og: http://ogp.me/ns#" property="og:description" content="Blazor WASM template optimized for Azure Static Web Apps, using TailwindCSS and .NET6. Come & collaborate with me!" />
-    <meta prefix="og: http://ogp.me/ns#" property="og:image" content="@(_navigationManager.BaseUri)img/icon-192.png" />
-    <meta prefix="og: http://ogp.me/ns#" property="og:url" content="@(_navigationManager.BaseUri)" />
-    <link rel="canonical" href="@(_navigationManager.BaseUri)" />
-
-</HeadContent>
+<HeaderComponent Title="@PageTitle" MetaTags="@MetaTags"></HeaderComponent>
 
 <h1><img src="img/icon-192.png" alt="" class="mr-5 inline-block" height="96"> Hello, world!</h1>
 
@@ -20,7 +10,12 @@ Welcome to your new app.
 <SurveyPrompt Title="How is Blazor working for you?" />
 
 @code {
-    // https://github.com/joshbuchea/HEAD
-    private protected string Description = "Description set by component";
-    private protected string Title = "Title set by component";
+    private protected string PageTitle = "Home page";
+    private protected Dictionary<string, string> MetaTags = new() { { "description", "Blazor WASM index page." } };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(0);
+        MetaTags.Add("og:image", _navigationManager.BaseUri + "img/icon-192.png");
+    }
 }
