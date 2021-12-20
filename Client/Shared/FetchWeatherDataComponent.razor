@@ -41,6 +41,7 @@ else
     {
         try
         {
+            Console.WriteLine("_hostEnv.Environment: " + _hostEnv.Environment);
             // If the code is running on the pre-rendering process, then don't call APIs.
             if (_hostEnv.Environment == "Prerendering") return;
 
