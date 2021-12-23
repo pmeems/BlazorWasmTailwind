@@ -1,24 +1,18 @@
 module.exports = {
-    purge: {
-        enabled: true,
-        content: [
-            "./**/*.html",
-            "./**/*.razor"
-        ],
-    }, darkMode: false,
+    content: [
+        "./**/*.html",
+        "./**/*.razor"
+    ],
     theme: {
         extend: {
             gridTemplateRows: {
                 // Complex site-specific row configuration
-                'layout': "auto 1fr auto",
+                'layout': "auto 1fr auto"
             },
             scale: {
                 '-1': "-1"
             }
         }
-    },
-    variants: {
-        extend: {}
     },
     plugins: []
 }
