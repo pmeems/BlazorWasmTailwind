@@ -3,13 +3,25 @@
     {
       "route": "/img/*",
       "headers": {
-        "cache-control": "must-revalidate, max-age=15770000"
+        "cache-control": "immutable, max-age=15770000"
       }
     },
     {
       "route": "favicon.ico",
       "headers": {
-        "cache-control": "must-revalidate, max-age=15770000"
+        "cache-control": "immutable, max-age=15770000"
+      }
+    },
+    {
+      "route": "/css/*",
+      "headers": {
+        "cache-control": "immutable, max-age=15770000"
+      }
+    },
+    {
+      "route": "/_framework/*",
+      "headers": {
+        "cache-control": "immutable, max-age=15770000"
       }
     }
   ],
