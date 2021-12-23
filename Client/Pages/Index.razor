@@ -1,11 +1,14 @@
 ﻿@page "/"
 @inject NavigationManager _navigationManager
+@inject IConfiguration _configuration
 
 <HeaderComponent Title="@PageTitle" MetaTags="@MetaTags"></HeaderComponent>
 
 <h1><img src="img/icon-192.png" alt="" class="mr-5 inline-block" height="96"> Hello, world!</h1>
 
-Welcome to your new app.
+<p>Welcome to your new app.</p>
+<p>Config: @_configuration["WebUrl"]</p>
+<p>Env: @Environment.GetEnvironmentVariable("WebUrl")</p>
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 

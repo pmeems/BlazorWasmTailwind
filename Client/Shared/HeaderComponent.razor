@@ -1,19 +1,24 @@
 ﻿@inject NavigationManager _navigationManager
+@inject IWebAssemblyHostEnvironment _hostEnv
 
-<PageTitle>@Title</PageTitle>
-<HeadContent>
-    @foreach (var (key, value) in MetaTags)
-    {
-        @if (key.StartsWith("og:"))
+@*Only run if the code is running on the pre-rendering process, else these values get duplicated:*@
+@if (_hostEnv.Environment == "Prerendering")
+{
+    <PageTitle>@Title</PageTitle>
+    <HeadContent>
+        @foreach (var (key, value) in MetaTags)
         {
-            <meta prefix="og: http://ogp.me/ns#" property="@key" content="@value" />
+            @if (key.StartsWith("og:"))
+            {
+                <meta prefix="og: http://ogp.me/ns#" property="@key" content="@value"/>
+            }
+            else
+            {
+                <meta name="@key" content="@value"/>
+            }
         }
-        else
-        {
-            <meta name="@key" content="@value" />
-        }
-    }
-</HeadContent>
+    </HeadContent>
+}
 
 @code {
     [Parameter, EditorRequired]
@@ -24,12 +29,13 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await Task.Delay(0);
+
         var pageUrl = _navigationManager.Uri;
 
         // https://github.com/joshbuchea/HEAD
 
-        await Task.Delay(0);
-        // Add default value:
+    // Add default value:
         const string defaultDescription = "Blazor WASM template optimized for Azure Static Web Apps, using TailwindCSS and .NET6. Come & collaborate with me!";
 
         if (!MetaTags.ContainsKey("description")) MetaTags.Add("description", defaultDescription);
