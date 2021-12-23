@@ -1,10 +1,11 @@
 ﻿@using System.Data.SqlTypes
+@implements IDisposable
 @inject HttpClient _http
 @inject IWebAssemblyHostEnvironment _hostEnv
 
 @if (Loading)
 {
-    <LoadingComponent></LoadingComponent>
+    <LoadingComponent/>
 }
 else
 {
@@ -32,6 +33,8 @@ else
 }
 
 @code {
+    // Create the CancellationTokenSource:
+    private CancellationTokenSource _cts = new();
     private protected WeatherForecast[] Forecasts = { };
     private protected bool Loading = true;
 
@@ -42,7 +45,8 @@ else
             // If the code is running on the pre-rendering process, then don't call APIs.
             if (_hostEnv.Environment == "Prerendering") return;
 
-            Forecasts = await _http.GetFromJsonAsync<WeatherForecast[]>("/api/WeatherForecast") ?? new WeatherForecast[] { };
+            // https://www.meziantou.net/canceling-background-tasks-when-a-user-navigates-away-from-a-blazor-component.htm
+            Forecasts = await _http.GetFromJsonAsync<WeatherForecast[]>("/api/WeatherForecast", _cts.Token) ?? new WeatherForecast[] { };
         }
         catch (Exception ex)
         {
@@ -53,5 +57,12 @@ else
         {
             Loading = false;
         }
+    }
+
+    // Cancel the token
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
     }
 }
