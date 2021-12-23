@@ -1,8 +1,11 @@
 ﻿@inject NavigationManager _navigationManager
 @inject IWebAssemblyHostEnvironment _hostEnv
 
-@*Only run if the code is running on the pre-rendering process, else these values get duplicated:*@
-@if (_hostEnv.Environment == "Prerendering")
+@*
+    Only run if the code is running not on production, else these values get duplicated,
+    because the headers are already created during the pre-render process:
+*@
+@if (_hostEnv.Environment != "Production")
 {
     <PageTitle>@Title</PageTitle>
     <HeadContent>
@@ -10,11 +13,11 @@
         {
             @if (key.StartsWith("og:"))
             {
-                <meta prefix="og: http://ogp.me/ns#" property="@key" content="@value"/>
+                <meta prefix="og: http://ogp.me/ns#" property="@key" content="@value" />
             }
             else
             {
-                <meta name="@key" content="@value"/>
+                <meta name="@key" content="@value" />
             }
         }
     </HeadContent>
@@ -27,15 +30,22 @@
     [Parameter, EditorRequired]
     public Dictionary<string, string> MetaTags { get; set; } = new();
 
+    [Parameter]
+    public ImageMetaTag ImageProperties { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await Task.Delay(0);
 
-        var pageUrl = _navigationManager.Uri;
+        // Is the wrong value when running prerender:
+        // var pageUrl = _navigationManager.Uri;
+        // Should be retrieved from Application Settings in Azure:
+        //https://stackoverflow.com/questions/70461295/read-azure-portal-application-settings-of-the-static-web-app-service-using-blazo
+        var pageUrl = GetCanonicalUrl("https://purple-meadow-079619e03.azurestaticapps.net/");
 
         // https://github.com/joshbuchea/HEAD
 
-    // Add default value:
+        // Add default value:
         const string defaultDescription = "Blazor WASM template optimized for Azure Static Web Apps, using TailwindCSS and .NET6. Come & collaborate with me!";
 
         if (!MetaTags.ContainsKey("description")) MetaTags.Add("description", defaultDescription);
@@ -46,8 +56,23 @@
         if (!MetaTags.ContainsKey("og:title")) MetaTags.Add("og:title", Title); // 60-90 letters
         if (!MetaTags.ContainsKey("og:description")) MetaTags.Add("og:description", MetaTags["description"]); // use around 200 letters
         if (!MetaTags.ContainsKey("og:url")) MetaTags.Add("og:url", pageUrl); // the canonical URL for the page
+        if (!MetaTags.ContainsKey("og:site_name")) MetaTags.Add("og:site_name", defaultDescription); // A tag that denotes the name of the Web site in which the shared page resides
 
         // og:image: The recommended resolution for an OG image is 1200 pixels x 627 pixels (1.91/1 ratio). Don’t exceed the 5MB size limit.
+        if (!string.IsNullOrWhiteSpace(ImageProperties.Name))
+        {
+            var imgUrl = $"{pageUrl}{ImageProperties.Name}";
+            MetaTags.Add("og:image", imgUrl);
+            MetaTags.Add("og:image:width", ImageProperties.Width.ToString());
+            MetaTags.Add("og:image:heigth", ImageProperties.Heigth.ToString());
+            MetaTags.Add("twitter:image", imgUrl);
+            MetaTags.Add("twitter:image:alt", ImageProperties.Alt);
+        }
+        else
+        {
+            // Facebook: The 'og:image' property should be explicitly provided, even if a value can be inferred from other tags.
+            MetaTags.Add("og:image", "");
+        }
 
         // Check for Facebook with: https://developers.facebook.com/tools/debug/
 
@@ -56,8 +81,23 @@
         if (!MetaTags.ContainsKey("twitter:title")) MetaTags.Add("twitter:title", Title);
         if (!MetaTags.ContainsKey("twitter:description")) MetaTags.Add("twitter:description", MetaTags["description"]); // Twitter limits this part to 200 characters.
         if (!MetaTags.ContainsKey("twitter:url")) MetaTags.Add("twitter:url", pageUrl);
-        if (MetaTags.ContainsKey("og:image") && !MetaTags.ContainsKey("twitter:image")) MetaTags.Add("twitter:image", MetaTags["og:image"]);
+
 
         // Twitter card approval: https://cards-dev.twitter.com/validator
+
+        //  Non-Essential, But Required for Analytics
+        // <meta property="fb:app_id" content="your_app_id" />
+        // <meta name="twitter:site" content="@website-username">
+    }
+
+    private string GetCanonicalUrl(string absoluteUrl)
+    {
+        var pageUrl = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);
+        var combinedUrl = $"{absoluteUrl}{pageUrl}";
+        if (!combinedUrl.Contains("?"))
+            return combinedUrl;
+
+        var urlParts = combinedUrl.ToLower().Split('?');
+        return urlParts[0];
     }
 }
